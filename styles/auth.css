@@ -1,0 +1,731 @@
+
+/* ========================================
+   Rasta Authentication
+   Login + Multi-step Signup
+   ======================================== */
+
+.rasta-auth-page {
+  --auth-ink: #102640;
+  --auth-muted: #49627d;
+  --auth-teal: #009d91;
+  --auth-teal-dark: #007c77;
+  --auth-border: #d8eae8;
+  --auth-input: #fafffe;
+
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 18px;
+  color: var(--auth-ink);
+  font-family: "Vazirmatn", Tahoma, sans-serif;
+  background:
+    radial-gradient(
+      ellipse at 8% 12%,
+      rgba(170, 222, 137, 0.3),
+      transparent 25rem
+    ),
+    radial-gradient(
+      ellipse at 92% 78%,
+      rgba(183, 237, 225, 0.48),
+      transparent 30rem
+    ),
+    linear-gradient(
+      145deg,
+      #e8f7fc 0%,
+      #fffef8 50%,
+      #effbf6 100%
+    );
+}
+
+.rasta-auth-page *,
+.rasta-auth-page *::before,
+.rasta-auth-page *::after {
+  box-sizing: border-box;
+}
+
+.rasta-auth-page button,
+.rasta-auth-page input,
+.rasta-auth-page select {
+  font: inherit;
+}
+
+.rasta-auth-card {
+  width: 100%;
+  max-width: 440px;
+  min-width: 0;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.91);
+  box-shadow:
+    0 22px 65px rgba(23, 88, 97, 0.1),
+    0 2px 10px rgba(23, 88, 97, 0.04);
+  backdrop-filter: blur(14px);
+}
+
+.rasta-signup-card {
+  max-width: 660px;
+}
+
+.rasta-auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 26px;
+  color: var(--auth-ink);
+  text-decoration: none;
+}
+
+.rasta-auth-brand img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.rasta-auth-brand strong,
+.rasta-auth-brand small {
+  display: block;
+}
+
+.rasta-auth-brand strong {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.rasta-auth-brand small {
+  margin-top: 3px;
+  color: var(--auth-muted);
+  font-size: 11px;
+}
+
+.rasta-auth-eyebrow {
+  margin: 20px 0 5px;
+  color: var(--auth-teal-dark);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.rasta-auth-card h1 {
+  margin: 0;
+  color: var(--auth-ink);
+  font-size: clamp(23px, 4vw, 29px);
+  font-weight: 900;
+  line-height: 1.6;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.rasta-auth-description {
+  max-width: 470px;
+  margin: 8px auto 24px;
+  color: var(--auth-muted);
+  font-size: 14px;
+  line-height: 2;
+  text-align: center;
+}
+
+/* Progress indicator */
+
+.rasta-auth-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 22px;
+}
+
+.rasta-auth-progress span {
+  display: block;
+  width: 30px;
+  height: 5px;
+  border-radius: 99px;
+  background: #dcebe8;
+}
+
+.rasta-auth-progress span.active,
+.rasta-auth-progress span.done {
+  background: linear-gradient(
+    90deg,
+    var(--auth-teal),
+    var(--auth-teal-dark)
+  );
+}
+
+.rasta-signup-progress {
+  margin: 8px 0 24px;
+}
+
+.rasta-progress-track {
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e2efed;
+}
+
+.rasta-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    #19bda8,
+    var(--auth-teal-dark)
+  );
+  transition: width 0.25s ease;
+}
+
+.rasta-progress-labels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.rasta-progress-labels span {
+  color: #81939f;
+  font-size: 11px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.rasta-progress-labels span.current {
+  color: var(--auth-teal-dark);
+  font-weight: 800;
+}
+
+/* Form layout */
+
+.rasta-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.rasta-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 12px;
+}
+
+.rasta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  color: var(--auth-ink);
+  text-align: right;
+}
+
+.rasta-field-full {
+  grid-column: 1 / -1;
+}
+
+.rasta-field > span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rasta-field b {
+  color: #d45c66;
+}
+
+.rasta-field small {
+  color: #7c8e9d;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.rasta-field input,
+.rasta-field select {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 11px 13px;
+  border: 1px solid var(--auth-border);
+  border-radius: 14px;
+  outline: none;
+  color: var(--auth-ink);
+  background: var(--auth-input);
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.rasta-field input::placeholder {
+  color: #9aabb6;
+}
+
+.rasta-field input:focus,
+.rasta-field select:focus {
+  border-color: var(--auth-teal);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 157, 145, 0.1);
+}
+
+.rasta-field select {
+  cursor: pointer;
+}
+
+.rasta-otp-input {
+  text-align: center;
+  letter-spacing: 0.45em;
+  font-size: 22px !important;
+  font-weight: 800;
+}
+
+.rasta-otp-meta {
+  min-height: 22px;
+  margin-top: -6px;
+  color: var(--auth-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.rasta-text-button {
+  padding: 0;
+  border: 0;
+  color: var(--auth-teal-dark);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.rasta-text-button:hover {
+  text-decoration: underline;
+}
+
+/* Goal selection */
+
+.rasta-goals-fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.rasta-goals-fieldset legend {
+  width: 100%;
+  margin-bottom: 12px;
+  color: var(--auth-ink);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.9;
+}
+
+.rasta-goals-fieldset legend small {
+  color: var(--auth-muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.rasta-goals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.rasta-goal-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 65px;
+  padding: 10px;
+  border: 1px solid var(--auth-border);
+  border-radius: 15px;
+  color: var(--auth-muted);
+  background: #fbfefd;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.rasta-goal-option:hover {
+  border-color: #8dcfc7;
+}
+
+.rasta-goal-option.selected {
+  border-color: var(--auth-teal);
+  color: var(--auth-ink);
+  background: #e9faf5;
+}
+
+.rasta-goal-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rasta-goal-option:focus-within {
+  outline: 2px solid var(--auth-teal);
+  outline-offset: 3px;
+}
+
+.rasta-goal-symbol {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 11px;
+  color: var(--auth-teal-dark);
+  background: #e1f6ef;
+  font-size: 19px;
+}
+
+.rasta-goal-option > span:nth-of-type(2) {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.rasta-goal-check {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  border: 1px solid #c7dcd8;
+  border-radius: 6px;
+  color: white;
+  background: white;
+  font-size: 12px;
+}
+
+.rasta-goal-option.selected .rasta-goal-check {
+  border-color: var(--auth-teal);
+  background: var(--auth-teal);
+}
+
+/* Privacy and terms */
+
+.rasta-consents {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 15px;
+  background: #f4faf8;
+}
+
+.rasta-consents label {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--auth-muted);
+  font-size: 12px;
+  line-height: 1.9;
+  cursor: pointer;
+}
+
+.rasta-consents input {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  margin-top: 4px;
+  accent-color: var(--auth-teal);
+  cursor: pointer;
+}
+
+.rasta-consents a {
+  color: var(--auth-teal-dark);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Buttons */
+
+.rasta-form-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.rasta-primary-button,
+.rasta-secondary-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 12px 17px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.7;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.rasta-primary-button {
+  flex: 1;
+  color: white;
+  background: linear-gradient(135deg, #10bca9, #007c78);
+  box-shadow: 0 9px 22px rgba(0, 143, 132, 0.18);
+}
+
+.rasta-primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0, 143, 132, 0.25);
+}
+
+.rasta-primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.rasta-primary-button > span,
+.rasta-secondary-button > span {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.rasta-primary-button > span {
+  color: var(--auth-teal-dark);
+  background: white;
+}
+
+.rasta-secondary-button {
+  flex: 0 0 auto;
+  justify-content: center;
+  border: 1px solid var(--auth-border);
+  color: var(--auth-muted);
+  background: #fff;
+}
+
+.rasta-secondary-button:hover {
+  background: #f2faf8;
+}
+
+.rasta-button-link {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.rasta-form-error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #f1d1d1;
+  border-radius: 12px;
+  color: #a83242;
+  background: #fff4f4;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* Footer text */
+
+.rasta-auth-switch {
+  margin: 22px 0 0;
+  color: var(--auth-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.rasta-auth-switch a {
+  color: var(--auth-teal-dark);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.rasta-auth-switch a:hover {
+  text-decoration: underline;
+}
+
+.rasta-auth-privacy {
+  margin: 14px 0 0;
+  color: #82949f;
+  font-size: 11px;
+  line-height: 1.9;
+  text-align: center;
+}
+
+.rasta-auth-loading {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: 24px;
+  color: var(--auth-muted);
+  font-family: "Vazirmatn", Tahoma, sans-serif;
+}
+
+/* Success state */
+
+.rasta-signup-success {
+  text-align: center;
+}
+
+.rasta-success-mark {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 10px auto 18px;
+  border: 8px solid #dff7ef;
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(135deg, #10bca9, #007c78);
+  box-shadow: 0 8px 22px rgba(0, 143, 132, 0.17);
+  font-size: 35px;
+  font-weight: 800;
+}
+
+/* Tablet and mobile */
+
+@media (max-width: 600px) {
+  .rasta-auth-page {
+    align-items: flex-start;
+    padding: 18px 12px;
+  }
+
+  .rasta-auth-card,
+  .rasta-signup-card {
+    max-width: 480px;
+    padding: 23px 17px;
+    border-radius: 24px;
+  }
+
+  .rasta-auth-brand {
+    margin-bottom: 20px;
+  }
+
+  .rasta-auth-brand img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .rasta-auth-brand strong {
+    font-size: 26px;
+  }
+
+  .rasta-auth-description {
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .rasta-form-grid {
+    gap: 14px 10px;
+  }
+
+  .rasta-field input,
+  .rasta-field select {
+    min-height: 46px;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .rasta-goals-grid {
+    gap: 8px;
+  }
+
+  .rasta-goal-option {
+    gap: 7px;
+    min-height: 60px;
+    padding: 8px;
+  }
+
+  .rasta-goal-symbol {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+    font-size: 16px;
+  }
+
+  .rasta-goal-option > span:nth-of-type(2) {
+    font-size: 11px;
+  }
+
+  .rasta-progress-labels span {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .rasta-auth-page {
+    padding: 10px 8px;
+  }
+
+  .rasta-auth-card,
+  .rasta-signup-card {
+    padding: 20px 13px;
+    border-radius: 21px;
+  }
+
+  .rasta-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rasta-field-full {
+    grid-column: auto;
+  }
+
+  .rasta-goals-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rasta-goal-option {
+    min-height: 54px;
+  }
+
+  .rasta-progress-labels {
+    gap: 4px;
+  }
+
+  .rasta-progress-labels span {
+    font-size: 9px;
+  }
+
+  .rasta-form-actions {
+    gap: 7px;
+  }
+
+  .rasta-primary-button,
+  .rasta-secondary-button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rasta-auth-page *,
+  .rasta-auth-page *::before,
+  .rasta-auth-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
