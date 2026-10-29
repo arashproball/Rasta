@@ -49,7 +49,7 @@ export default function SignupPage() {
     if (!data.goals.length && !data.otherGoal.trim()) return setError("حداقل یک هدف را انتخاب یا وارد کنید.");
     if (!data.privacyAccepted || !data.termsAccepted) return setError("تأیید حریم خصوصی و شرایط استفاده الزامی است.");
     // TODO: Send `data` to the registration API. This demo does not create an account yet.
-    console.log("Signup data:", data); setSubmitted(true);
+    setSubmitted(true);
   }
 
   if (submitted) return <main className="rasta-auth-page" dir="rtl"><section className="rasta-auth-card rasta-signup-success">
